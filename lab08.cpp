@@ -12,6 +12,14 @@ unsigned mult(unsigned, unsigned);
 unsigned power(unsigned, unsigned);
 unsigned product(unsigned, unsigned);
 
+
+//helper tail recursive functions
+unsigned fact_helper(unsigned, unsigned);
+unsigned fib_helper(unsigned, unsigned, unsigned);
+unsigned mult_helper(unsigned, unsigned, unsigned);
+unsigned power_helper(unsigned, unsigned, unsigned);
+unsigned product_helper(unsigned, unsigned, unsigned);
+
 /*******************************************************************************
  * Description:
  * Starting point of the program. Calls various recursive functions that can be
@@ -46,61 +54,96 @@ int main() {
  * TODO: make them tail recursive :)
 *******************************************************************************/
 
-unsigned fact(unsigned n) {
+unsigned fact_helper(unsigned n, unsigned accum) {
     // base cases (combined)
     if (n <= 1) {
-        return 1;
+        return accum; //updated return to be accum instead of 1
     }
 
     // recursive case
-    unsigned res = fact(n - 1);
-    return res * n;
+    // unsigned res = fact(n - 1);
+    // return res * n;
+
+    // tail recursive 
+    return fact_helper(n-1, n * accum); //move operation to function call
+
 }
 
-unsigned fib(unsigned n) {
+unsigned fib_helper(unsigned n, unsigned prev = 0, unsigned curr = 1) {
     // base case 1
     if (n == 0) {
-        return 0;
+        return prev; //return 0th fib number
     }
 
     // base case 2
     else if (n == 1) {
-        return 1;
+        return curr; //return 1st fib number
     }
 
     // recursive case
-    return fib(n - 1) + fib(n - 2);
+    return fib_helper(n - 1, curr, prev + curr); 
+}
+
+unsigned mult_helper(unsigned x, unsigned y, unsigned accum) {
+    // base case
+    if (y == 0) {
+        return accum; //return total
+    }
+
+    // recursive case
+    // unsigned res = mult(x, y - 1);
+    // return res + x;
+
+    // tail recursive 
+    return mult_helper(x, y-1, accum + x); //move operation to function call
+}
+
+unsigned power_helper(unsigned x, unsigned y, unsigned accum) {
+    // base case
+    if (y == 0) {
+        return accum;
+    }
+
+    // recursive case
+    // unsigned res = power(x, y - 1);
+    // return res * x;
+
+    // tail rescursive 
+    return power_helper(x, y-1, accum * x); //move operation to function call
+}
+
+unsigned product_helper(unsigned x, unsigned y,unsigned accum) { // multiplies nums from x to y 
+    // base case
+    if (x == y) {
+        return accum * x; // mult last number to total and return
+    }
+
+    // recursive case
+    // unsigned p = product(x + 1, y);
+    // return p * x;
+
+    // tail recursive 
+    return product_helper(x + 1, y, accum * x); //move operation to function call
+}
+
+
+//call helper functions 
+unsigned fact(unsigned n) {
+    return fact_helper(n, 1);  // Start with accumulator = 1
+}
+
+unsigned fib(unsigned n) {
+    return fib_helper(n, 0, 1);  // Start with prev=0, curr=1
 }
 
 unsigned mult(unsigned x, unsigned y) {
-    // base case
-    if (y == 0) {
-        return 0;
-    }
-
-    // recursive case
-    unsigned res = mult(x, y - 1);
-    return res + x;
+    return mult_helper(x, y, 0);  // Start with accumulator = 0
 }
 
 unsigned power(unsigned x, unsigned y) {
-    // base case
-    if (y == 0) {
-        return 1;
-    }
-
-    // recursive case
-    unsigned res = power(x, y - 1);
-    return res * x;
+    return power_helper(x, y, 1);  // Start with accumulator = 1
 }
 
 unsigned product(unsigned x, unsigned y) {
-    // base case
-    if (x == y) {
-        return x;
-    }
-
-    // recursive case
-    unsigned p = product(x + 1, y);
-    return p * x;
+    return product_helper(x, y, 1);  // Start with accumulator = 1
 }
